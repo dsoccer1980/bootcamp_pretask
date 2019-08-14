@@ -3,17 +3,33 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Login</title>
+    <script>
+        function setCredentials(username, password) {
+            document.getElementById('username').value=username;
+            document.getElementById('password').value=password;
+        }
+    </script>
 </head>
 
 <body>
 <h1>Login</h1>
 
+<form th:action="@{/login}" method="post">
+<input type="text" name="username" id="username"/>
+<input type="password" name="password" id="password"/>
+<button type="submit"
+                 onclick="login(document.getElementById('username').value , document.getElementById('password').value)">old
+</button>
 
-            <form th:action="@{/login}" method="post">
-                <input type="text" name="name"/>
-                <input type="password" name="password"/>
-                <input type="submit" value="Login"/>
-            </form>
+    <button type="submit">submit
+    </button>
+</form>
+<button
+        onclick="setCredentials('user', 'password')">user
+</button>
+<button
+        onclick="setCredentials('admin', 'password')">admin
+</button>
 
 
 </body>
