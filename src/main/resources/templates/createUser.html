@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit user</title>
+</head>
+<body>
+
+
+<form action="/admin/user/add" method="post">
+    <h1>User create:</h1>
+
+    <div class="row">
+        <label>Name:&nbsp;</label>
+        <input type="text" name="username" />
+        <input type="password" name="password"/>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+        <button onclick="window.history.back()" type="button">Cancel</button>
+    </div>
+</form>
+
+</body>
+</html>

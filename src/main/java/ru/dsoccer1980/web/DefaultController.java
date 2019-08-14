@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.dsoccer1980.domain.Role;
 import ru.dsoccer1980.domain.User;
 import ru.dsoccer1980.exception.NotFoundException;
 import ru.dsoccer1980.repository.UserRepository;
@@ -26,7 +27,6 @@ public class DefaultController {
     public String home1() {
         return "/home";
     }
-
 
     @GetMapping("/admin")
     public String admin(Model model) {
@@ -53,7 +53,7 @@ public class DefaultController {
         User userFromDb = userRepository.findById(user.getId()).orElseThrow(() -> new NotFoundException("user id not found"));
         userFromDb.setUsername(user.getUsername());
         if (!userFromDb.getPassword().equals(user.getPassword())) {
-            userFromDb.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            setBCryptPassword(userFromDb);
         }
 
         userRepository.save(userFromDb);
@@ -69,6 +69,23 @@ public class DefaultController {
     @GetMapping("/login")
     public String login() {
         return "/login";
+    }
+
+    @GetMapping("/admin/user/add")
+    public String createPage() {
+        return "createUser";
+    }
+
+    @PostMapping("/admin/user/add")
+    public String createUser(User user) {
+        setBCryptPassword(user);
+        user.setRoles(Role.USER);
+        userRepository.save(user);
+        return "redirect:/admin";
+    }
+
+    private void setBCryptPassword(User user) {
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
     }
 
 

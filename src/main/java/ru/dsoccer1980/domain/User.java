@@ -44,6 +44,10 @@ public class User implements UserDetails {
         this.roles = EnumSet.of(role, roles);
     }
 
+    public void setRoles(Role role, Role... roles) {
+        this.roles = EnumSet.of(role, roles);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
