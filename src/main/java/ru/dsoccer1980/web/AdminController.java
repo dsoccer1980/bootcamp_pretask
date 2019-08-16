@@ -36,7 +36,7 @@ public class AdminController {
         return "editUser";
     }
 
-    @PostMapping(value = "/admin/user/update", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "/admin/user/update")
     public String update(User user) {
         User userFromDb = userRepository.findById(user.getId()).orElseThrow(() -> new NotFoundException("user id not found"));
         userFromDb.setUsername(user.getUsername());
