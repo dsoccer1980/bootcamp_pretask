@@ -2,6 +2,7 @@ package ru.dsoccer1980.web;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,30 +16,41 @@ import ru.dsoccer1980.exception.NotFoundException;
 import ru.dsoccer1980.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @AllArgsConstructor
-public class DefaultController {
+public class MainController {
 
     private final UserRepository userRepository;
 
     @GetMapping("/")
-    public String home1() {
-        return "/home";
+    public String home(HttpServletRequest request) {
+        Principal userPrincipal = request.getUserPrincipal();
+        if (userPrincipal != null) {
+            Set<Role> roles = ((User) ((UsernamePasswordAuthenticationToken) userPrincipal).getPrincipal()).getRoles();
+            if (roles.contains(Role.USER)) {
+                return "redirect:/user";
+            } else if (roles.contains(Role.ADMIN)) {
+                return "redirect:/admin";
+            }
+        }
+        return "/login";
     }
 
     @GetMapping("/admin")
     public String admin(Model model) {
         List<User> users = userRepository.findAll();
         model.addAttribute("users", users);
-        return "/admin";
+        return "/adminPage";
     }
 
     @GetMapping("/user")
     public String user(HttpServletRequest request, Model model) {
         model.addAttribute("username", request.getRemoteUser());
-        return "/user";
+        return "/userPage";
     }
 
     @GetMapping("/admin/user/edit")
@@ -53,7 +65,7 @@ public class DefaultController {
         User userFromDb = userRepository.findById(user.getId()).orElseThrow(() -> new NotFoundException("user id not found"));
         userFromDb.setUsername(user.getUsername());
         if (!userFromDb.getPassword().equals(user.getPassword())) {
-            setBCryptPassword(userFromDb);
+            setBCryptPassword(userFromDb, user.getPassword());
         }
 
         userRepository.save(userFromDb);
@@ -78,14 +90,14 @@ public class DefaultController {
 
     @PostMapping("/admin/user/add")
     public String createUser(User user) {
-        setBCryptPassword(user);
+        setBCryptPassword(user, user.getPassword());
         user.setRoles(Role.USER);
         userRepository.save(user);
         return "redirect:/admin";
     }
 
-    private void setBCryptPassword(User user) {
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+    private void setBCryptPassword(User user, String password) {
+        user.setPassword(new BCryptPasswordEncoder().encode(password));
     }
 
 

@@ -3,26 +3,42 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Edit user</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
 
 
-<form action="/admin/user/update" method="post">
-    <h1>User edit:</h1>
-
-    <input type="hidden" name="id" th:value="${user.id}"/>
-
+<div class="container">
     <div class="row">
-        <label>Name:&nbsp;</label>
-        <input type="text" name="username" th:value="${user.username}"/>
-        <input type="password" name="password" th:value="${user.password}"/>
+        <h1 align="center">User edit:</h1>
     </div>
 
-    <div class="row">
-        <button type="submit">Save</button>
-        <button onclick="window.history.back()" type="button">Cancel</button>
-    </div>
+    <form action="/admin/user/update" method="post">
+    <div class="col-sm-3">
+             <input type="hidden" name="id" th:value="${user.id}"/>
+
+            <div class="form-group">
+              <h4>Name:&nbsp;</h4>
+             <input type="text" name="username" th:value="${user.username}" class="form-control"/>
+            </div>
+
+             <h4>Password:&nbsp;</h4>
+             <div class="form-group">
+               <input type="password" name="password" th:value="${user.password}" class="form-control"/>
+             </div>
+
+
+         <div class="form-group">
+             <button type="submit" class="btn btn-primary">Save</button>
+             <button onclick="window.history.back()" type="button" class="btn btn-secondary">Cancel</button>
+        </div>
+
+     </div>
+
 </form>
+
+</div>
+
 
 </body>
 </html>
